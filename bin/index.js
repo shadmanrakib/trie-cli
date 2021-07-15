@@ -14,9 +14,7 @@ function add(str, map) {
         map["self"] = true;
         return map;
     } else {
-        console.log(map)
         if(map[str.substring(0,1)]) {
-            console.log("here")
             map[str.substring(0,1)] = add(str.substring(1), map[str.substring(0,1)]);
             return map;
         } else {
@@ -26,8 +24,22 @@ function add(str, map) {
     }
 }
 
-
-
+function exists(str, map) {
+    if (str.length == 0) {
+        if (map["self"]) {
+            return true
+        } else {
+            return false
+        }
+    } else {
+        console.log(map)
+        if(map[str.substring(0,1)]) {
+            return exists(str.substring(1), map[str.substring(0,1)]);
+        } else {
+            return false;
+        }
+    }
+} 
 
 const argv = yargs(hideBin(process.argv)).options({
     'd': {
@@ -69,7 +81,7 @@ if (argv["del"]) {
     });
     console.log(`Added ${argv["add"]}`)
 } else if (argv["search"]) {
-    console.log('Retreat from the xupptumblers!')
+    console.log(`Searched for ${argv["search"]}: ${exists(argv["search"], trie)}`)
 } else if (argv["autocomplete"]) {
     console.log('Retreat from the xupptumblers!')
 } else if (argv["display"]) {

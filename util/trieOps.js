@@ -16,9 +16,9 @@ function add(str, map) {
 function exists(str, map) {
     if (str.length == 0) {
         if (map["self"]) {
-            return true
+            return true;
         } else {
-            return false
+            return false;
         }
     } else {
         if (map[str.substring(0, 1)]) {
@@ -52,8 +52,33 @@ function remove(str, map) {
     }
 }
 
+function display(map) {
+    let words = [];
+
+    displayHelper('', map, words);
+
+    return words;
+}
+
+function displayHelper(str, map, words) {
+    if (map["self"]) {
+        words.push(str);
+    }
+
+    Object.keys(map).forEach(k => {
+        if (k !== "self") {
+            displayHelper(str + k, map[k], words);
+        }
+    });
+}
+
+function autocomplete() {
+
+}
+
 module.exports = {
     add: add,
     exists: exists,
-    remove: remove
+    remove: remove,
+    display: display
 };

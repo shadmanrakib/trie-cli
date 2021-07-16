@@ -3,7 +3,7 @@
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 
-const { add, exists, remove } = require("../util/trieOps")
+const { add, exists, remove, display } = require("../util/trieOps")
 
 const fs = require('fs');
 const fileName = "./trie.json"
@@ -60,8 +60,8 @@ if (argv["del"]) {
     console.log(`${argv["search"]} exists: ${exists(argv["search"], trie)}`)
 } else if (argv["autocomplete"]) {
     console.log('Retreat from the xupptumblers!')
-} else if (argv["display"]) {
-    console.log('Retreat from the xupptumblers!')
+} else if (argv["display"] == '') {
+    console.log(display(trie))
 } else {
     console.log("Use trie --help for help")
 }

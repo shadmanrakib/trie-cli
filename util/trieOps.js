@@ -72,13 +72,22 @@ function displayHelper(str, map, words) {
     });
 }
 
-function autocomplete() {
+function autocomplete(str, map) {
+    newMap = { ...map }
+    for (var i = 0; i < str.length; i++) {
+        newMap = newMap[str.charAt(i)];
+    }
 
+    let words = [];
+    displayHelper(str, newMap, words);
+
+    return words;
 }
 
 module.exports = {
     add: add,
     exists: exists,
     remove: remove,
-    display: display
+    display: display,
+    autocomplete: autocomplete
 };

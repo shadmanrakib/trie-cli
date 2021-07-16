@@ -3,7 +3,7 @@
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 
-const { add, exists, remove, display } = require("../util/trieOps")
+const { add, exists, remove, display, autocomplete } = require("../util/trieOps")
 
 const fs = require('fs');
 const fileName = "./trie.json"
@@ -26,7 +26,7 @@ const argv = yargs(hideBin(process.argv)).options({
         describe: 'Search keyword',
         type: 'string'
     },
-    'f': {
+    'c': {
         alias: 'autocomplete',
         describe: 'Suggest keyword(s) trie',
         type: 'string'
@@ -59,7 +59,7 @@ if (argv["del"]) {
 } else if (argv["search"]) {
     console.log(`${argv["search"]} exists: ${exists(argv["search"], trie)}`)
 } else if (argv["autocomplete"]) {
-    console.log('Retreat from the xupptumblers!')
+    console.log(autocomplete(argv["autocomplete"], trie))
 } else if (argv["display"] == '') {
     console.log(display(trie))
 } else {

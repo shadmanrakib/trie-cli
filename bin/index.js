@@ -3,65 +3,149 @@
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 
-const { add, exists, remove, display, autocomplete } = require("../util/trieOps")
+const axios = require('axios')
 
-const fs = require('fs');
-const fileName = "./trie.json"
-let rawdata = fs.readFileSync(fileName);
-let trie = JSON.parse(rawdata);
+const functionsBaseURL = "http://localhost:5001/trie-88b16/us-central1";
 
-const argv = yargs(hideBin(process.argv)).options({
-    'd': {
-        alias: 'del',
-        describe: 'Delete keyword from trie',
-        type: 'string'
-    },
-    'a': {
-        alias: 'add',
-        describe: 'Add keyword from trie',
-        type: 'string'
-    },
-    's': {
-        alias: 'search',
-        describe: 'Search keyword',
-        type: 'string'
-    },
-    'c': {
-        alias: 'autocomplete',
-        describe: 'Suggest keyword(s) trie',
-        type: 'string'
-    },
-    'p': {
-        alias: 'display',
-        describe: 'Suggest keyword(s) trie',
-        type: 'string'
-    },
-}).argv
-
-if (argv["del"]) {
-    mod = remove(argv["del"], trie);
-    fs.writeFile(fileName, JSON.stringify(mod), function writeJSON(err) {
-        if (err) return console.log(err);
-    });
-
-    console.log(`Deleted ${argv["del"]}`)
-} else if (argv["add"]) {
-    if (!exists(argv["add"], trie)) {
-        mod = add(argv["add"], trie);
-        fs.writeFile(fileName, JSON.stringify(mod), function writeJSON(err) {
-            if (err) return console.log(err);
-        });
-
-        console.log(`Added ${argv["add"]}`)
-    } else {
-        console.log(`${argv["add"]} already exists`)
-    }
-} else if (argv["search"]) {
-    console.log(`${argv["search"]} exists: ${exists(argv["search"], trie)}`)
-} else if (argv["autocomplete"]) {
-    console.log(autocomplete(argv["autocomplete"], trie))
-} else if (argv["display"] == '') {
-    console.log(display(trie))
-} else {
-    console.log("Use trie --help for help")
-}
+require('yargs')
+    .scriptName('trie')
+    .usage('trie <cmd> [args]')
+    .command(['display', 'print', 'dis', 'p'],
+             'Display words in trie', 
+             (argv) => {
+              axios.get(`${functionsBaseURL}/displayTrie`, {
+                params: {
+                  word: argv.word
+                }
+              })
+              .then(function (response) {
+                if(response.statusText && response.statusText == "OK") {
+                  if(response.data.success) {
+                    console.log(`Trie: ${response.data.words}`);
+                  } else {
+                    console.log(`Error: ${response.data.message}`);
+                  }
+                } else {
+                  console.log("An error has occured.");
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+             })
+    .command(['add <word>', 'a'],
+             'Add word to the trie',
+             (yargs) => {
+               yargs.positional('word', {
+                 describe: 'The word you want to add to the trie',
+                 type: 'string'
+               });
+             }, (argv) => {
+              axios.get(`${functionsBaseURL}/addWord`, {
+                params: {
+                  word: argv.word
+                }
+              })
+              .then(function (response) {
+                if(response.statusText && response.statusText == "OK") {
+                  if(response.data.success) {
+                    console.log(`Added ${argv.word}`);
+                  } else {
+                    console.log(`Error: ${response.data.message}`);
+                  }
+                } else {
+                  console.log("An error has occured.");
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+             })
+    .command(['del <word>', 'delete', 'remove', 'r'],
+             'Delete word from trie',
+             (yargs) => {
+               yargs.positional('word', {
+                 describe: 'The word you want to delete from trie',
+                 type: 'string'
+               });
+             }, (argv) => {
+              axios.get(`${functionsBaseURL}/removeWord`, {
+                params: {
+                  word: argv.word
+                }
+              })
+                .then(function (response) {
+                  if(response.statusText && response.statusText == "OK") {
+                    if(response.data.success) {
+                      console.log(`Deleted ${argv.word}`);
+                    } else {
+                      console.log(`Error: ${response.data.message}`);
+                    }
+                  } else {
+                    console.log("An error has occured.");
+                  }
+                })
+                .catch(function (error) {
+                  console.log(error);
+                })
+             })
+    .command(['autocomplete <str>', 'suggest', 'c'],
+             'Suggests words in trie that start with str',
+            (yargs) => {
+              yargs.positional('str', {
+                describe: 'The string you want autocompletion suggestions for',
+                type: 'string'
+              });
+            }, 
+             (argv) => {
+              axios.get(`${functionsBaseURL}/autocompleteSuggestions`, {
+                params: {
+                  str: argv.str
+                }
+              })
+              .then(function (response) {
+                if(response.statusText && response.statusText == "OK") {
+                  if(response.data.success) {
+                    console.log(`Suggestions: ${response.data.words}`);
+                  } else {
+                    console.log(`Error: ${response.data.message}`);
+                  }
+                } else {
+                  console.log("An error has occured.");
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+             })
+    .command(['search <word>', 'exists', 'e'],
+             'Search if a word exists in the trie',
+             (yargs) => {
+               yargs.positional('word', {
+                 describe: 'The word that you want to check whether it exists in the trie',
+                 type: 'string'
+               });
+             }, (argv) => {
+              axios.get(`${functionsBaseURL}/existsWord`, {
+                params: {
+                  word: argv.word
+                }
+              })
+              .then(function (response) {
+                if(response.statusText && response.statusText == "OK") {
+                  if(response.data.success) {
+                    console.log(`Exists: ${response.data.exists}`);
+                  } else {
+                    console.log(`Error: ${response.data.message}`);
+                  }
+                } else {
+                  console.log("An error has occured.");
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+             })
+    .demandCommand()
+    .help()
+    .parse();

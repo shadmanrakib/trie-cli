@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/OnikuSpedu/trie-cli#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "chalk": "^4.1.1",
     "fs": "0.0.1-security",
     "yargs": "^17.0.1"

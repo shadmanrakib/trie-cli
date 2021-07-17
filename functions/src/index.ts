@@ -1,4 +1,7 @@
+// The Firebase Cloud Functions SDK
 import * as functions from "firebase-functions";
+
+
 import {add, remove, exists, display, autocomplete} from "./trieOps";
 
 // The Firebase Admin SDK to access Firestore.
@@ -6,6 +9,7 @@ import * as admin from "firebase-admin";
 
 admin.initializeApp();
 
+/** Cloud function that adds word specified in request query to trie*/
 export const addWord = functions.https.onRequest(
   async (req: functions.Request, res: functions.Response) => {
   try {
@@ -27,8 +31,9 @@ export const addWord = functions.https.onRequest(
     } else {
       res.json({ success: false });
     }
-  } catch {
-    res.json({ success: false });
+  } catch (err) {
+    console.log(err);
+    res.json({ success: false, message: "An error has occured. Check the cloud functions log for further details."});
   }
 });
 

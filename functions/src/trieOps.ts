@@ -1,6 +1,3 @@
-// "npm --prefix \"$RESOURCE_DIR\" run build"
-
-
 interface Trie {
   [key: string]: any // eslint-disable-line
 }

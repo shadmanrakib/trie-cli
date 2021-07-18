@@ -191,7 +191,7 @@ The functions have JSDOC comments. A JSDOC Documentation was generated, and is a
 
 ### CLI Interaction with Functions
 
-The CLI uses axios to send GET requests to the endpoints.
+The CLI uses axios to send GET requests to the endpoints. Commands are mapped to the appropriate GET requests by Yargs. The data from the response is returned in promises, which are handled in the index.ts file.
 
 ### Endpoints
 

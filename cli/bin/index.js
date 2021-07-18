@@ -17,7 +17,7 @@ require('yargs')
              (argv) => {
               display(functionsBaseURL, argv.word)
               .then(function (data) {
-                console.log(`Trie: ${data.words}`);
+                console.log("Trie: ", data.words);
               })
               .catch(function (error) {
                 console.log(error);
@@ -66,7 +66,7 @@ require('yargs')
              (argv) => {
               autocomplete(functionsBaseURL, argv.str)
               .then(function (data) {
-                console.log(`Suggestions: ${data.words}`);
+                console.log("Suggestions: ",data.words);
               })
               .catch(function (error) {
                 console.log(error);

@@ -1,13 +1,13 @@
 const { add, del, search, autocomplete, display, reset } = require('../util/trieOps')
 
-const numOfWords = 100;
-const maxWordLength = 20;
-const minWordLength = 1;
+const numOfWords = 50; // Please do not use a huge number because it will cost me a lot of money
+const maxWordLength = 10; // Inclusive
+const minWordLength = 1; // Inclusive
 const deletionPercent = 0.5;
 
-const inDevelopment = true;
+const inDevelopment = false;
 
-const functionsBaseURL = inDevelopment ? "http://localhost:5001/trie-88b16/us-central1" : "";
+const functionsBaseURL = inDevelopment ? "http://localhost:5001/trie-88b16/us-central1" : "https://us-central1-trie-88b16.cloudfunctions.net";
 
 /* Generation method adapted from csharptest.net's answer on
    https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript */

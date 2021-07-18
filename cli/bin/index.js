@@ -5,9 +5,9 @@ const { hideBin } = require('yargs/helpers')
 
 const {add, del, search, autocomplete, display, reset} = require('../util/trieOps')
 
-const inDevelopment = true;
+const inDevelopment = false;
 
-const functionsBaseURL = inDevelopment ? "http://localhost:5001/trie-88b16/us-central1" : "";
+const functionsBaseURL = inDevelopment ? "http://localhost:5001/trie-88b16/us-central1" : "https://us-central1-trie-88b16.cloudfunctions.net";
 
 require('yargs')
     .scriptName('trie')

@@ -189,7 +189,7 @@ The functions have JSDOC comments. A JSDOC Documentation was generated, and is a
 
 ### Endpoints
 
-The functions are deployed at ***URL***
+The functions are deployed at ***https://us-central1-trie-88b16.cloudfunctions.net***
 
 Endpoint | Params | Description
 ---------|--------|-------------
@@ -201,7 +201,7 @@ searchWord | word (string) | Searchs if word exists in the trie
 resetTrie | | Resets global trie
 
 #### displayTrie
-*URL:* URL/displayTrie
+*URL:* https://us-central1-trie-88b16.cloudfunctions.net/displayTrie
 
 If the request is successfully executed, then a JSON object is returned that contains a *success* key and a *words* key. The success key should be set to true. The words key should be set to an array of strings.
 
@@ -229,7 +229,7 @@ Example:
 ```
 
 #### addWord
-*URL:* URL/addWord
+*URL:* https://us-central1-trie-88b16.cloudfunctions.net/addWord
 
 *Parameter:* word (string)
 
@@ -273,7 +273,7 @@ For example, if *app* is not added successfully, and the error message is `Must 
 ```
 
 #### deleteWord
-*URL:* URL/deleteWord
+*URL:* https://us-central1-trie-88b16.cloudfunctions.net/deleteWord
 
 *Parameter:* word (string)
 
@@ -317,7 +317,7 @@ For example, if *apple* is not removed successfully, and the error message is `M
 ```
 
 #### autocompleteSuggestions
-*URL:* URL/autocompleteSuggestions
+*URL:* https://us-central1-trie-88b16.cloudfunctions.net/autocompleteSuggestions
 
 *Parameter:* str (string)
 
@@ -347,7 +347,7 @@ Example:
 ```
 
 #### searchWord
-*URL:* URL/searchWord
+*URL:* https://us-central1-trie-88b16.cloudfunctions.net/searchWord
 
 *Parameter:* word (string)
 
@@ -377,7 +377,7 @@ Example:
 ```
 
 #### resetTrie
-*URL:* URL/resetTrie
+*URL:* https://us-central1-trie-88b16.cloudfunctions.net/resetTrie
 
 If the request is successfully executed, then a JSON object is returned that contains a *success* key and a *trie* key. The success key should be set to true. The trie key should be `{}`.
 
@@ -411,8 +411,8 @@ Inside the cli directory is a test directrory. This contains `trieOps.test.js` f
 The following is the default config:
 
 ```JavaScript
-const numOfWords = 100;
-const maxWordLength = 20; // Inclusive
+const numOfWords = 50; // Please do not use a huge number because it will cost me a lot of money
+const maxWordLength = 10; // Inclusive
 const minWordLength = 1; // Inclusive
 const deletionPercent = 0.5;
 ```

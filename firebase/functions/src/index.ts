@@ -1,13 +1,14 @@
 // The Firebase Cloud Functions SDK
 import * as functions from "firebase-functions";
 
-
 import {add, remove, exists, display, autocomplete} from "./trieOps";
 
 // The Firebase Admin SDK to access Firestore.
 import * as admin from "firebase-admin";
 
 admin.initializeApp();
+
+const db = admin.database();
 
 /** Cloud function that adds word specified in request query to trie*/
 export const addWord = functions.https.onRequest(
@@ -16,18 +17,11 @@ export const addWord = functions.https.onRequest(
         const word = req.query.word;
 
         if (typeof word == "string") {
-          const trieRef = admin.firestore().collection("tries").doc("global");
-          const oldTrieSnapshot = await trieRef.get();
-          const data = oldTrieSnapshot.data();
-
-          let oldTrie = {};
-
-          if (data && data.trie && typeof data.trie == "object") {
-            oldTrie = data.trie;
-          }
-
+          const oldTrieSnapshot = await db.ref("trie").get();
+          const data = oldTrieSnapshot.val();
+          const oldTrie = data ? data : {};
           const newTrie = add(word, oldTrie);
-          await trieRef.set({trie: newTrie});
+          await db.ref("trie").set(newTrie);
           res.json({success: true, trie: newTrie});
         } else {
           res.json({
@@ -52,25 +46,18 @@ export const deleteWord = functions.https.onRequest(
         const word = req.query.word;
 
         if (typeof word == "string") {
-          const trieRef = admin.firestore().collection("tries").doc("global");
-          const oldTrieSnapshot = await trieRef.get();
-          const data = oldTrieSnapshot.data();
+          const oldTrieSnapshot = await db.ref("trie").get();
+          const data = oldTrieSnapshot.val();
+          const oldTrie = data ? data : {};
 
-          if (data && data.trie && typeof data.trie == "object") {
-            if (exists(word, data.trie)) {
-              const newTrie = remove(word, data.trie);
-              await trieRef.set({trie: newTrie});
-              res.json({success: true, trie: newTrie});
-            } else {
-              res.json({
-                success: false,
-                message: "Word does not exist in trie.",
-              });
-            }
+          if (exists(word, oldTrie)) {
+            const newTrie = remove(word, oldTrie);
+            await db.ref("trie").set(newTrie);
+            res.json({success: true, trie: newTrie});
           } else {
             res.json({
               success: false,
-              message: "Trie does not exist.",
+              message: "Word does not exist in trie.",
             });
           }
         } else {
@@ -96,18 +83,11 @@ export const searchWord = functions.https.onRequest(
         const word = req.query.word;
 
         if (typeof word == "string") {
-          const trieRef = admin.firestore().collection("tries").doc("global");
-          const oldTrieSnapshot = await trieRef.get();
-          const data = oldTrieSnapshot.data();
+          const oldTrieSnapshot = await db.ref("trie").get();
+          const data = oldTrieSnapshot.val();
+          const oldTrie = data ? data : {};
 
-          if (data && data.trie && typeof data.trie == "object") {
-            res.json({success: true, exists: exists(word, data.trie)});
-          } else {
-            res.json({
-              success: false,
-              message: "Trie does not exist.",
-            });
-          }
+          res.json({success: true, exists: exists(word, oldTrie)});
         } else {
           res.json({
             success: false,
@@ -127,18 +107,11 @@ export const searchWord = functions.https.onRequest(
 export const displayTrie = functions.https.onRequest(
     async (req: functions.Request, res: functions.Response) => {
       try {
-        const trieRef = admin.firestore().collection("tries").doc("global");
-        const trieSnapshot = await trieRef.get();
-        const data = trieSnapshot.data();
+        const oldTrieSnapshot = await db.ref("trie").get();
+        const data = oldTrieSnapshot.val();
+        const oldTrie = data ? data : {};
 
-        if (data && data.trie && typeof data.trie == "object") {
-          res.json({success: true, words: display(data.trie)});
-        } else {
-          res.json({
-            success: false,
-            message: "Trie does not exist.",
-          });
-        }
+        res.json({success: true, words: display(oldTrie)});
       } catch {
         res.json({
           success: false,
@@ -159,19 +132,12 @@ export const autocompleteSuggestions = functions.https.onRequest(
         const str = req.query.str;
 
         if (typeof str == "string") {
-          const trieRef = admin.firestore().collection("tries").doc("global");
-          const trieSnapshot = await trieRef.get();
-          const data = trieSnapshot.data();
+          const oldTrieSnapshot = await db.ref("trie").get();
+          const data = oldTrieSnapshot.val();
+          const trie = data ? data : {};
 
-          if (data && data.trie && typeof data.trie == "object") {
-            const suggestions = autocomplete(str, data.trie);
-            res.json({success: true, words: suggestions});
-          } else {
-            res.json({
-              success: false,
-              message: "Trie does not exist.",
-            });
-          }
+          const suggestions = autocomplete(str, trie);
+          res.json({success: true, words: suggestions});
         } else {
           res.json({
             success: false,
@@ -193,9 +159,7 @@ export const autocompleteSuggestions = functions.https.onRequest(
 export const resetTrie = functions.https.onRequest(
     async (req: functions.Request, res: functions.Response) => {
       try {
-        const trieRef = admin.firestore().collection("tries").doc("global");
-        await trieRef.set({trie: {}});
-
+        await db.ref("trie").set({});
         res.json({success: true, trie: {}});
       } catch {
         res.json({

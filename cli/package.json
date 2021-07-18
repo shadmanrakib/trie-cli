@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "bin": {
     "trie": "./bin/index.js"
@@ -25,5 +25,8 @@
     "chalk": "^4.1.1",
     "fs": "0.0.1-security",
     "yargs": "^17.0.1"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6"
   }
 }

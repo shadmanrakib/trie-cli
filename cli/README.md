@@ -1,10 +1,12 @@
 # trie-cli
 
+A Command Line Interface (CLI) to display, add, delete, search, and autocomplete words in a global trie.
+
 ## CLI Installation
 
-The cli requires nodejs. Please download nodejs You can download nodejs here: https://nodejs.org/en/download/. 
+The CLI requires nodejs. Please download nodejs You can download nodejs here: https://nodejs.org/en/download/. 
 
-The cli is available on npm, which is downloaded by default when installing nodejs. In order to install the cli, run the following in your terminal:
+The CLI is available on npm, which is downloaded by default when installing nodejs. In order to install the CLI, run the following in your terminal:
 
 ```
 npm install -g trie-cli
@@ -183,9 +185,13 @@ For example, a trie that contains *ape, app,* and *apps* would look like
 
 ## Firebase Functions
 
-The api endpoints that interact with Firestore are deployed using Firebase Functions on the Google Cloud Platform. I chose to use Firebase Functions because used Firebase Firestore. 
+The api endpoints that interact with Realtime Database are deployed using Firebase Functions on the Google Cloud Platform. I chose to use Firebase Functions because used Firebase Realtime Database.
 
 The functions have JSDOC comments. A JSDOC Documentation was generated, and is available in `firebase/functions/jsdoc_documentation`. Please view it for further documentation on the functions. 
+
+### CLI Interaction with Functions
+
+The CLI uses axios to send GET requests to the endpoints.
 
 ### Endpoints
 
@@ -406,7 +412,7 @@ Example:
 
 Jest is used for testing. **I would prefer the tests be run using firebase emulators so that I'm not charged money.**
 
-Inside the cli directory is a test directrory. This contains `trieOps.test.js` file. There are variables at the top of the file that are used to control the number of random words generated, the lengths of the words generated, and a decimal to represent the percent of words that are deleted. maxWordLength and minWordLength are inclusive.
+Inside the CLI directory is a test directrory. This contains `trieOps.test.js` file. There are variables at the top of the file that are used to control the number of random words generated, the lengths of the words generated, and a decimal to represent the percent of words that are deleted. maxWordLength and minWordLength are inclusive.
 
 The following is the default config:
 
@@ -417,7 +423,7 @@ const minWordLength = 1; // Inclusive
 const deletionPercent = 0.5;
 ```
 
-To run tests, go to the cli directory, and run:
+To run tests, go to the CLI directory, and run:
 
 ```
 npm test

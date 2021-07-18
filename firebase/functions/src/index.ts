@@ -187,6 +187,9 @@ export const autocompleteSuggestions = functions.https.onRequest(
     }
 );
 
+/**
+ * Cloud function that resets the global trie
+ */
 export const resetTrie = functions.https.onRequest(
     async (req: functions.Request, res: functions.Response) => {
       try {

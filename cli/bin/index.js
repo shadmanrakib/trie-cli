@@ -3,7 +3,7 @@
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 
-const axios = require('axios')
+const {add, del, search, autocomplete, display, reset} = require('../util/trieOps')
 
 const functionsBaseURL = "http://localhost:5001/trie-88b16/us-central1";
 
@@ -13,21 +13,9 @@ require('yargs')
     .command(['display', 'print', 'dis', 'p'],
              'Display words in trie', 
              (argv) => {
-              axios.get(`${functionsBaseURL}/displayTrie`, {
-                params: {
-                  word: argv.word
-                }
-              })
-              .then(function (response) {
-                if(response.statusText && response.statusText == "OK") {
-                  if(response.data.success) {
-                    console.log(`Trie: ${response.data.words}`);
-                  } else {
-                    console.log(`Error: ${response.data.message}`);
-                  }
-                } else {
-                  console.log("An error has occured.");
-                }
+              display(functionsBaseURL, argv.word)
+              .then(function (data) {
+                console.log(`Trie: ${data.words}`);
               })
               .catch(function (error) {
                 console.log(error);
@@ -41,21 +29,9 @@ require('yargs')
                  type: 'string'
                });
              }, (argv) => {
-              axios.get(`${functionsBaseURL}/addWord`, {
-                params: {
-                  word: argv.word
-                }
-              })
-              .then(function (response) {
-                if(response.statusText && response.statusText == "OK") {
-                  if(response.data.success) {
-                    console.log(`Added ${argv.word}`);
-                  } else {
-                    console.log(`Error: ${response.data.message}`);
-                  }
-                } else {
-                  console.log("An error has occured.");
-                }
+              add(functionsBaseURL, argv.word)
+              .then(function (data) {
+                console.log(`Added ${argv.word}`);
               })
               .catch(function (error) {
                 console.log(error);
@@ -69,21 +45,9 @@ require('yargs')
                  type: 'string'
                });
              }, (argv) => {
-              axios.get(`${functionsBaseURL}/deleteWord`, {
-                params: {
-                  word: argv.word
-                }
-              })
-                .then(function (response) {
-                  if(response.statusText && response.statusText == "OK") {
-                    if(response.data.success) {
-                      console.log(`Deleted ${argv.word}`);
-                    } else {
-                      console.log(`Error: ${response.data.message}`);
-                    }
-                  } else {
-                    console.log("An error has occured.");
-                  }
+              del(functionsBaseURL, argv.word)
+                .then(function (data) {
+                  console.log(`Deleted ${argv.word}`);
                 })
                 .catch(function (error) {
                   console.log(error);
@@ -98,21 +62,9 @@ require('yargs')
               });
             }, 
              (argv) => {
-              axios.get(`${functionsBaseURL}/autocompleteSuggestions`, {
-                params: {
-                  str: argv.str
-                }
-              })
-              .then(function (response) {
-                if(response.statusText && response.statusText == "OK") {
-                  if(response.data.success) {
-                    console.log(`Suggestions: ${response.data.words}`);
-                  } else {
-                    console.log(`Error: ${response.data.message}`);
-                  }
-                } else {
-                  console.log("An error has occured.");
-                }
+              autocomplete(functionsBaseURL, argv.str)
+              .then(function (data) {
+                console.log(`Suggestions: ${data.words}`);
               })
               .catch(function (error) {
                 console.log(error);
@@ -126,21 +78,20 @@ require('yargs')
                  type: 'string'
                });
              }, (argv) => {
-              axios.get(`${functionsBaseURL}/searchWord`, {
-                params: {
-                  word: argv.word
-                }
+              search(functionsBaseURL, argv.word)
+              .then(function (data) {
+                console.log(`Exists: ${data.exists}`);
               })
-              .then(function (response) {
-                if(response.statusText && response.statusText == "OK") {
-                  if(response.data.success) {
-                    console.log(`Exists: ${response.data.exists}`);
-                  } else {
-                    console.log(`Error: ${response.data.message}`);
-                  }
-                } else {
-                  console.log("An error has occured.");
-                }
+              .catch(function (error) {
+                console.log(error);
+              })
+             })
+    .command(['reset'],
+             'Resets global trie',
+             (argv) => {
+              reset(functionsBaseURL, argv.word)
+              .then(function (data) {
+                console.log(`Reset completed.`);
               })
               .catch(function (error) {
                 console.log(error);

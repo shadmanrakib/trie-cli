@@ -14,19 +14,26 @@ const db = admin.database();
 export const addWord = functions.https.onRequest(
     async (req: functions.Request, res: functions.Response) => {
       try {
-        const word = req.query.word;
+        if (req.query && req.query.word) {
+          const word = req.query.word;
 
-        if (typeof word == "string") {
-          const oldTrieSnapshot = await db.ref("trie").get();
-          const data = oldTrieSnapshot.val();
-          const oldTrie = data ? data : {};
-          const newTrie = add(word, oldTrie);
-          await db.ref("trie").set(newTrie);
-          res.json({success: true, trie: newTrie});
+          if (typeof word == "string") {
+            const oldTrieSnapshot = await db.ref("trie").get();
+            const data = oldTrieSnapshot.val();
+            const oldTrie = data ? data : {};
+            const newTrie = add(word, oldTrie);
+            await db.ref("trie").set(newTrie);
+            res.json({success: true, trie: newTrie});
+          } else {
+            res.json({
+              success: false,
+              message: "Word must be a string.",
+            });
+          }
         } else {
           res.json({
             success: false,
-            message: "Word must be a string.",
+            message: "Must provide the parameter word",
           });
         }
       } catch (err) {
@@ -43,27 +50,34 @@ export const addWord = functions.https.onRequest(
 export const deleteWord = functions.https.onRequest(
     async (req: functions.Request, res: functions.Response) => {
       try {
-        const word = req.query.word;
+        if (req.query && req.query.word) {
+          const word = req.query.word;
 
-        if (typeof word == "string") {
-          const oldTrieSnapshot = await db.ref("trie").get();
-          const data = oldTrieSnapshot.val();
-          const oldTrie = data ? data : {};
+          if (typeof word == "string") {
+            const oldTrieSnapshot = await db.ref("trie").get();
+            const data = oldTrieSnapshot.val();
+            const oldTrie = data ? data : {};
 
-          if (exists(word, oldTrie)) {
-            const newTrie = remove(word, oldTrie);
-            await db.ref("trie").set(newTrie);
-            res.json({success: true, trie: newTrie});
+            if (exists(word, oldTrie)) {
+              const newTrie = remove(word, oldTrie);
+              await db.ref("trie").set(newTrie);
+              res.json({success: true, trie: newTrie});
+            } else {
+              res.json({
+                success: false,
+                message: "Word does not exist in trie.",
+              });
+            }
           } else {
             res.json({
               success: false,
-              message: "Word does not exist in trie.",
+              message: "Word provided must be a string.",
             });
           }
         } else {
           res.json({
             success: false,
-            message: "Word provided must be a string.",
+            message: "Must provide the parameter word",
           });
         }
       } catch {
@@ -80,18 +94,25 @@ export const deleteWord = functions.https.onRequest(
 export const searchWord = functions.https.onRequest(
     async (req: functions.Request, res: functions.Response) => {
       try {
-        const word = req.query.word;
+        if (req.query && req.query.word) {
+          const word = req.query.word;
 
-        if (typeof word == "string") {
-          const oldTrieSnapshot = await db.ref("trie").get();
-          const data = oldTrieSnapshot.val();
-          const oldTrie = data ? data : {};
+          if (typeof word == "string") {
+            const oldTrieSnapshot = await db.ref("trie").get();
+            const data = oldTrieSnapshot.val();
+            const oldTrie = data ? data : {};
 
-          res.json({success: true, exists: exists(word, oldTrie)});
+            res.json({success: true, exists: exists(word, oldTrie)});
+          } else {
+            res.json({
+              success: false,
+              message: "Word must be a string.",
+            });
+          }
         } else {
           res.json({
             success: false,
-            message: "Word must be a string.",
+            message: "Must provide the parameter word",
           });
         }
       } catch {
@@ -129,19 +150,26 @@ export const displayTrie = functions.https.onRequest(
 export const autocompleteSuggestions = functions.https.onRequest(
     async (req: functions.Request, res: functions.Response) => {
       try {
-        const str = req.query.str;
+        if (req.query && req.query.str) {
+          const str = req.query.str;
 
-        if (typeof str == "string") {
-          const oldTrieSnapshot = await db.ref("trie").get();
-          const data = oldTrieSnapshot.val();
-          const trie = data ? data : {};
+          if (typeof str == "string") {
+            const oldTrieSnapshot = await db.ref("trie").get();
+            const data = oldTrieSnapshot.val();
+            const trie = data ? data : {};
 
-          const suggestions = autocomplete(str, trie);
-          res.json({success: true, words: suggestions});
+            const suggestions = autocomplete(str, trie);
+            res.json({success: true, words: suggestions});
+          } else {
+            res.json({
+              success: false,
+              message: "Parameter str must be a string.",
+            });
+          }
         } else {
           res.json({
             success: false,
-            message: "Parameter str must be a string.",
+            message: "Must provide the parameter str",
           });
         }
       } catch {

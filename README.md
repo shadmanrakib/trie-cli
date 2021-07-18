@@ -408,6 +408,8 @@ Jest is used for testing. **I would prefer the tests be run using firebase emula
 
 Inside the cli directory is a test directrory. This contains `trieOps.test.js` file. There are variables at the top of the file that are used to control the number of random words generated, the lengths of the words generated, and a decimal to represent the percent of words that are deleted. maxWordLength and minWordLength are inclusive.
 
+The following is the default config:
+
 ```JavaScript
 const numOfWords = 100;
 const maxWordLength = 20; // Inclusive

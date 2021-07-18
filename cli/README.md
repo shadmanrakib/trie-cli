@@ -155,13 +155,14 @@ trie reset
 ```
 
 
-## Firebase Firestore
+## Firebase Realtime Database
 
-The trie is store as a JSON object (refered to as map on Firestore). It is located in the *global* document in the *tries* collection. 
+The trie is store as a JSON object (refered to as map on Firestore).  
 
 The trie is represented as nested JSON objects with each key, except for the *self* key, representing a character. The *self* key is used to represent that the path of keys leading to it make a full word in the trie.
 
-For example, a trie that contains *ape, app,* and *apps* would look lik
+For example, a trie that contains *ape, app,* and *apps* would look like
+
 ```JSON
 {
     "a" : {
@@ -403,20 +404,35 @@ Example:
 
 ## Testing
 
+Jest is used for testing. **I would prefer the tests be run using firebase emulators so that I'm not charged money.**
+
+Inside the cli directory is a test directrory. This contains `trieOps.test.js` file. There are variables at the top of the file that are used to control the number of random words generated, the lengths of the words generated, and a decimal to represent the percent of words that are deleted. maxWordLength and minWordLength are inclusive.
+
+The following is the default config:
+
+```JavaScript
+const numOfWords = 100;
+const maxWordLength = 20; // Inclusive
+const minWordLength = 1; // Inclusive
+const deletionPercent = 0.5;
+```
+
 To run tests, go to the cli directory, and run:
 
 ```
 npm test
 ```
 
-## Plans
+## Future Improvements
 
 If I were to spend more time on this project I would:
 
-* Use AWS Simple Queue Service to create a queue to handle requests. I chose not to do this yet because it sort of goes against the scalability purpose of serverless functions and because I don't have an AWS account (I don't have a credit card).
-
 * Add more helpful error messages.
 
+* Write more extensive tests. I didn't want to go over my monthly free limit.
+
 * Use integers instead of booleans for the "self" key in order to keep track of how many times the word exists in the trie. 
+
+* Use AWS Simple Queue Service to create a queue to handle requests. I chose not to do this yet because it sort of goes against the scalability purpose of serverless functions and because I don't have an AWS account (I don't have a credit card).
 
 * Add a childrens key to each node except for the self key. Since storage is relatively cheap, it might sense to store the children strings so that autocompletion and display are constant time. However, this would require altering the childrens array every time there is an addition and deletion. So, this optimization makes sense if we are optimizing for read over write.

@@ -9,8 +9,8 @@ const inDevelopment = true;
 
 const functionsBaseURL = inDevelopment ? "http://localhost:5001/trie-88b16/us-central1" : "";
 
-//Generation method adapted from csharptest.net's answer on
-//https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+/* Generation method adapted from csharptest.net's answer on
+   https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript */
 
 function generateWord(minWordLength, maxWordLength) {
     let result = '';

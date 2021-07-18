@@ -186,3 +186,19 @@ export const autocompleteSuggestions = functions.https.onRequest(
       }
     }
 );
+
+export const resetTrie = functions.https.onRequest(
+    async (req: functions.Request, res: functions.Response) => {
+      try {
+        const trieRef = admin.firestore().collection("tries").doc("global");
+        await trieRef.set({trie: {}});
+
+        res.json({success: true, trie: {}});
+      } catch {
+        res.json({
+          success: false,
+          message: "An error has occured. Check the cloud functions log for further details..", // eslint-disable-line
+        });
+      }
+    }
+);

@@ -411,7 +411,7 @@ Inside the cli directory is a test directrory. This contains `trieOps.test.js` f
 The following is the default config:
 
 ```JavaScript
-const numOfWords = 50; // Please do not use a huge number because it will cost me a lot of money
+const numOfWords = 15; // Please do not use a huge number because it will cost me a lot of money. 15 takes up all my free bandwidth.
 const maxWordLength = 10; // Inclusive
 const minWordLength = 1; // Inclusive
 const deletionPercent = 0.5;

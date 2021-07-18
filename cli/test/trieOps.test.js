@@ -1,6 +1,6 @@
 const { add, del, search, autocomplete, display, reset } = require('../util/trieOps')
 
-const numOfWords = 50; // Please do not use a huge number because it will cost me a lot of money
+const numOfWords = 15; // Please do not use a huge number because it will cost me a lot of money. 15 takes up all my free bandwidth.
 const maxWordLength = 10; // Inclusive
 const minWordLength = 1; // Inclusive
 const deletionPercent = 0.5;
